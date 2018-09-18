@@ -5,7 +5,6 @@ import (
 	"crypto/rand"
 	b64 "encoding/base64"
 	"errors"
-	"fmt"
 	"golang.org/x/crypto/argon2"
 	"io"
 	"strconv"
@@ -36,8 +35,11 @@ func HashPassword(plaintextPassword string) string {
 	return hash.encode()
 }
 
-func PaswordCheck(plaintextPassword, encHash string) bool {
-	hash, _ := decode(encHash)
+func PasswordCheck(plaintextPassword, encHash string) bool {
+	hash, err := decode(encHash)
+	if err != nil {
+		return false
+	}
 	test := hash.hashString(plaintextPassword)
 	return bytes.Compare(test, hash.hash) == 0
 }
